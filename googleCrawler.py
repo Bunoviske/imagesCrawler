@@ -90,7 +90,7 @@ def persist_image(folder_path:str,file_name:str,url:str):
 DRIVER_PATH = "C:/Users/bruno/Documents/diabetesLearning/imageCrawler/chromedriver"
 
 ########### ADAPTAR ###############
-numberImages = 100
+numberImages = 100  
 queries = ["prato de comida brasileira de cima"] 
 
 wd = webdriver.Chrome(executable_path=DRIVER_PATH)
