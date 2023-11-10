@@ -7,6 +7,10 @@ import os
 import dhash
 from PIL import Image
 
+"""
+pip install dhash imutils
+"""
+
 
 from collections import OrderedDict
 
@@ -34,8 +38,8 @@ args = vars(ap.parse_args())
 
 # grab the paths to all images in our input dataset directory and
 # then initialize our hashes dictionary
-print("[INFO] computing image hashes...")
 imagePaths = list(paths.list_images(args["dataset"]))
+print(f"[INFO] computing image hashes... Found {len(imagePaths)} images")
 hashes = {}
 # loop over our image paths
 cont = 0
@@ -94,12 +98,14 @@ for (h, hashedPaths) in hashes.items():
 			cont = cont + len(hashedPaths) - 1
 			cv2.imshow("Montage", montage)
 			cv2.waitKey(0)
+
         # otherwise, we'll be removing the duplicate images
 		else:
 			# loop over all image paths with the same hash *except*
 			# for the first image in the list (since we want to keep
 			# one, and only one, of the duplicate images)
+			cont = cont + len(hashedPaths) - 1
 			for p in hashedPaths[1:]:
 				os.remove(p)
 
-print(cont)
+print(f"Duplicates found {cont}")
