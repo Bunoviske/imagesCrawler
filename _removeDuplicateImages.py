@@ -30,9 +30,9 @@ def my_dhash(image, hashSize=8):
 ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--dataset", required=True,
 	help="path to input dataset")
-ap.add_argument("-r", "--remove", type=int, default=-1,
+ap.add_argument("-r", "--remove", type=int, default=0,
 	help="whether or not duplicates should be removed (i.e., dry run). Set 1 to activate this feature.")
-ap.add_argument("-ra", "--removeall", type=int, default=-1,
+ap.add_argument("-ra", "--removeall", type=int, default=0,
 	help="whether or not all images that have duplicates, including original images, should be removed. Set 1 to activate this feature.")
 args = vars(ap.parse_args())
 
