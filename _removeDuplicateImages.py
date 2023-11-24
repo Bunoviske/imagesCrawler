@@ -31,7 +31,9 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--dataset", required=True,
 	help="path to input dataset")
 ap.add_argument("-r", "--remove", type=int, default=-1,
-	help="whether or not duplicates should be removed (i.e., dry run)")
+	help="whether or not duplicates should be removed (i.e., dry run). Set 1 to activate this feature.")
+ap.add_argument("-ra", "--removeall", type=int, default=-1,
+	help="whether or not all images that have duplicates, including original images, should be removed. Set 1 to activate this feature.")
 args = vars(ap.parse_args())
 
 
@@ -76,7 +78,21 @@ for (h, hashedPaths) in hashes.items():
 	# check to see if there is more than one image with the same hash
 	if len(hashedPaths) > 1:
 		# check to see if this is a dry run
-		if args["remove"] <= 0:
+        # otherwise, we'll be removing the duplicate images
+		if args["remove"] == 1:
+			# loop over all image paths with the same hash *except*
+			# for the first image in the list (since we want to keep
+			# one, and only one, of the duplicate images)
+			cont = cont + len(hashedPaths) - 1
+			for p in hashedPaths[1:]:
+				os.remove(p)
+
+		elif args["removeall"] == 1:	
+			cont = cont + len(hashedPaths) - 1
+			for p in hashedPaths:
+				os.remove(p)	
+
+		else:
 			# initialize a montage to store all images with the same
 			# hash
 			montage = None
@@ -93,19 +109,11 @@ for (h, hashedPaths) in hashes.items():
 				else:
 					montage = np.hstack([montage, image])
 
-			# show the montage for the hash
-			print("[INFO] hash: {}".format(h))
 			cont = cont + len(hashedPaths) - 1
-			cv2.imshow("Montage", montage)
-			cv2.waitKey(0)
 
-        # otherwise, we'll be removing the duplicate images
-		else:
-			# loop over all image paths with the same hash *except*
-			# for the first image in the list (since we want to keep
-			# one, and only one, of the duplicate images)
-			cont = cont + len(hashedPaths) - 1
-			for p in hashedPaths[1:]:
-				os.remove(p)
+			# show the montage for the hash
+			# print("[INFO] hash: {}".format(h))
+			# cv2.imshow("Montage", montage)
+			# cv2.waitKey(0)
 
 print(f"Duplicates found {cont}")
